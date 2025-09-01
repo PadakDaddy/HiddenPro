@@ -28,6 +28,11 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: "user", // 기본값 일반 사용자(user)로 설정
     },
+
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: "users",

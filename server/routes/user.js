@@ -123,12 +123,50 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       }
     );
+
+    const refreshToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // 리프레시 토큰을 DB에 저장
+    await user.update({ refreshToken });
     // 로그인 성공 - 여기서는 간단히 user 정보 반환
     // 추후 JWT 토큰 발급 등 인증 기능 추가 가능
     res.json({ message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+router.post("/token", async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(401).json({ error: "Refresh Token required" });
+  }
+
+  const user = await User.findOne({ where: { refreshToken } });
+
+  if (!user) {
+    return res.status(403).json({ error: "Invalid refresh token" });
+  }
+
+  jwt.verify(refreshToken, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: "Invalid refresh token" });
+    }
+
+    // 새 액세스 토큰 발급
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token });
+  });
 });
 
 module.exports = router;
