@@ -3,6 +3,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 
+const authenticateToken = require("../middleware/auth");
+const authorizeRoles = require("../middleware/authorize");
+
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "your-secret-key"; // 절대 유출되면 안 됨
 
@@ -50,7 +53,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update (회원 정보 수정)
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -80,17 +83,23 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete (회원 삭제)
-router.delete("/:id", async (req, res) => {
-  try {
-    const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
+// 예) 관리자만 회원 삭제 가능
+router.delete(
+  "/:id",
+  authenticateToken,
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const user = await User.findByPk(req.params.id);
+      if (!user) return res.status(404).json({ error: "User not found" });
 
-    await user.destroy();
-    res.json({ message: "User deleted" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+      await user.destroy();
+      res.json({ message: "User deleted" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // 로그인 API
 router.post("/login", async (req, res) => {
@@ -107,9 +116,13 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     // 로그인 성공 - 여기서는 간단히 user 정보 반환
     // 추후 JWT 토큰 발급 등 인증 기능 추가 가능
     res.json({ message: "Login successful", token });

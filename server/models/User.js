@@ -23,6 +23,11 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "user", // 기본값 일반 사용자(user)로 설정
+    },
   },
   {
     tableName: "users",
