@@ -14,18 +14,45 @@ const JWT_SECRET = "your-secret-key"; // 절대 유출되면 안 됨
 router.post("/", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    // 1. 비밀번호 해시(암호화)!
-    const hashedPassword = await bcrypt.hash(password, 10); // 10은 보통 쓰는 숫자
 
-    // 2. 해시한 패스워드를 DB에 저장
+    // 1. 비밀번호 해시화
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 2. 유저 생성
     const newUser = await User.create({
       username,
       email,
-      password: hashedPassword, // 바꾼 비밀번호를 저장!
+      password: hashedPassword,
     });
 
-    // 3. 결과 응답
-    res.status(201).json(newUser);
+    // 3. JWT 토큰 생성
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // 4. 리프레시 토큰 DB 저장
+    await newUser.update({ refreshToken });
+
+    // 5. 응답에 토큰과 함께 새 유저 정보 전달(비밀번호 제외)
+    res.status(201).json({
+      message: "User created and logged in",
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+      },
+      token,
+      refreshToken,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -134,7 +161,7 @@ router.post("/login", async (req, res) => {
     await user.update({ refreshToken });
     // 로그인 성공 - 여기서는 간단히 user 정보 반환
     // 추후 JWT 토큰 발급 등 인증 기능 추가 가능
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, refreshToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
