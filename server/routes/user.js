@@ -196,4 +196,25 @@ router.post("/token", async (req, res) => {
   });
 });
 
+// 로그아웃 API
+router.post("/logout", async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(400).json({ error: "Refresh Token required" });
+  }
+
+  try {
+    // 해당 리프레시 토큰이 저장된 유저 찾기
+    const user = await User.findOne({ where: { refreshToken } });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid refresh token" });
+    }
+    // 리프레시 토큰 DB에서 null로 업데이트 (무효화)
+    await user.update({ refreshToken: null });
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
