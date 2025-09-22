@@ -3,7 +3,7 @@ import RegisterForm from "../components/RegisterForm";
 
 const RegisterPage = () => (
   <div>
-    <h1>회원가입</h1>
+    <h1>Sign-up</h1>
     <RegisterForm />
   </div>
 );

@@ -1,9 +1,9 @@
 import React from "react";
 
 const experts = [
-  { id: 1, name: "홍길동", skill: "가구 조립", rating: 4.9 },
-  { id: 2, name: "김철수", skill: "전기", rating: 4.8 },
-  { id: 3, name: "박영희", skill: "청소", rating: 4.7 },
+  { id: 1, name: "Park", skill: "Funiture", rating: 4.9 },
+  { id: 2, name: "Kim", skill: "Electornic", rating: 4.8 },
+  { id: 3, name: "Lee", skill: "Cleaning", rating: 4.7 },
 ];
 
 const MainPage = () => {
@@ -16,25 +16,23 @@ const MainPage = () => {
 
   return (
     <div>
-      <h1>숨은 고수 - 전문가 마켓플레이스</h1>
+      <h1>Hidden Pro - Expert Market Place</h1>
 
       <input
         type="text"
-        placeholder="검색어 입력"
+        placeholder="Search.."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
 
       <section>
-        <h2>추천 전문가</h2>
+        <h2>Recommand Pro</h2>
         <ul>
           {filteredExperts.map((expert) => (
             <li key={expert.id}>
-              <strong>{expert.name}</strong> - {expert.skill} (평점:{" "}
+              <strong>{expert.name}</strong> - {expert.skill} (Rate:{" "}
               {expert.rating})
-              <button onClick={() => setSelectedExpert(expert)}>
-                상세보기
-              </button>
+              <button onClick={() => setSelectedExpert(expert)}>Detail</button>
             </li>
           ))}
         </ul>
@@ -42,10 +40,10 @@ const MainPage = () => {
 
       {selectedExpert && (
         <section>
-          <h3>{selectedExpert.name} 전문가 상세</h3>
-          <p>기술: {selectedExpert.skill}</p>
-          <p>평점: {selectedExpert.rating}</p>
-          <button onClick={() => setSelectedExpert(null)}>닫기</button>
+          <h3>{selectedExpert.name} Detail of Pro</h3>
+          <p>Skill: {selectedExpert.skill}</p>
+          <p>Rate: {selectedExpert.rating}</p>
+          <button onClick={() => setSelectedExpert(null)}>Close</button>
         </section>
       )}
     </div>

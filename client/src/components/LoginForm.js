@@ -17,7 +17,7 @@ const LoginForm = () => {
       setErrorMsg("");
       navigate("/main"); // 로그인 성공 후 메인페이지로 이동
     } catch (err) {
-      setErrorMsg("로그인 실패: 이메일이나 비밀번호를 확인하세요.");
+      setErrorMsg("Login Failed: Check E-mail or Password");
     }
   };
 
@@ -42,7 +42,7 @@ const LoginForm = () => {
         />
       </div>
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
-      <button type="submit">로그인</button>
+      <button type="submit">Login</button>
     </form>
   );
 };

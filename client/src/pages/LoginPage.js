@@ -3,7 +3,7 @@ import LoginForm from "../components/LoginForm";
 
 const LoginPage = () => (
   <div>
-    <h1>로그인</h1>
+    <h1>Login</h1>
     <LoginForm />
   </div>
 );
