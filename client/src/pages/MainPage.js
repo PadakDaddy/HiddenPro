@@ -1,4 +1,5 @@
 import React from "react";
+import NavBar from "../components/NavBar";
 
 const experts = [
   { id: 1, name: "Park", skill: "Funiture", rating: 4.9 },
@@ -15,38 +16,43 @@ const MainPage = () => {
   );
 
   return (
-    <div>
-      <h1>Hidden Pro - Expert Market Place</h1>
+    <>
+      <NavBar />
+      <div>
+        <h1>Hidden Pro - Expert Market Place</h1>
 
-      <input
-        type="text"
-        placeholder="Search.."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+        <input
+          type="text"
+          placeholder="Search.."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
 
-      <section>
-        <h2>Recommand Pro</h2>
-        <ul>
-          {filteredExperts.map((expert) => (
-            <li key={expert.id}>
-              <strong>{expert.name}</strong> - {expert.skill} (Rate:{" "}
-              {expert.rating})
-              <button onClick={() => setSelectedExpert(expert)}>Detail</button>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {selectedExpert && (
         <section>
-          <h3>{selectedExpert.name} Detail of Pro</h3>
-          <p>Skill: {selectedExpert.skill}</p>
-          <p>Rate: {selectedExpert.rating}</p>
-          <button onClick={() => setSelectedExpert(null)}>Close</button>
+          <h2>Recommand Pro</h2>
+          <ul>
+            {filteredExperts.map((expert) => (
+              <li key={expert.id}>
+                <strong>{expert.name}</strong> - {expert.skill} (Rate:{" "}
+                {expert.rating})
+                <button onClick={() => setSelectedExpert(expert)}>
+                  Detail
+                </button>
+              </li>
+            ))}
+          </ul>
         </section>
-      )}
-    </div>
+
+        {selectedExpert && (
+          <section>
+            <h3>{selectedExpert.name} Detail of Pro</h3>
+            <p>Skill: {selectedExpert.skill}</p>
+            <p>Rate: {selectedExpert.rating}</p>
+            <button onClick={() => setSelectedExpert(null)}>Close</button>
+          </section>
+        )}
+      </div>
+    </>
   );
 };
 

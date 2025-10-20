@@ -1,9 +1,14 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider, AuthContext } from "./AuthContext";
 
 const PrivateRoute = ({ element }) => {
   const { user, loading } = useContext(AuthContext);
