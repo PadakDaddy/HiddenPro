@@ -7,7 +7,10 @@ const authenticateToken = require("../middleware/auth");
 const authorizeRoles = require("../middleware/authorize");
 
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "your-secret-key"; // 절대 유출되면 안 됨
+
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 // Create (회원 생성)
 // 회원가입 API
