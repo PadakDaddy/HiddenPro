@@ -79,6 +79,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'username', 'email', 'role'] // 비밀번호 제외
+    });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Update (회원 정보 수정)
 router.put("/:id", authenticateToken, async (req, res) => {
   try {
