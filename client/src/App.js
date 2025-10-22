@@ -26,7 +26,7 @@ function App() {
             path="/main"
             element={<PrivateRoute element={<MainPage />} />}
           />
-          <Route path="*" element={<MainPage />} />
+          <Route path="*" element={<Navigate to="/main" />} />
         </Routes>
       </Router>
     </AuthProvider>
