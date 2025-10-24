@@ -1,18 +1,18 @@
 import React from "react";
 import NavBar from "../components/NavBar";
+import { Link } from "react-router-dom";
 
 const experts = [
-  { id: 1, name: "Park", skill: "Funiture", rating: 4.9 },
-  { id: 2, name: "Kim", skill: "Electornic", rating: 4.8 },
-  { id: 3, name: "Lee", skill: "Cleaning", rating: 4.7 },
+  { id: 1, username: "Park", skill: "Funiture", rating: 4.9 },
+  { id: 2, username: "Kim", skill: "Electornic", rating: 4.8 },
+  { id: 3, username: "Lee", skill: "Cleaning", rating: 4.7 },
 ];
 
 const MainPage = () => {
   const [query, setQuery] = React.useState("");
-  const [selectedExpert, setSelectedExpert] = React.useState(null);
 
   const filteredExperts = experts.filter(
-    (expert) => expert.name.includes(query) || expert.skill.includes(query)
+    (expert) => expert.username.includes(query) || expert.skill.includes(query)
   );
 
   return (
@@ -33,24 +33,19 @@ const MainPage = () => {
           <ul>
             {filteredExperts.map((expert) => (
               <li key={expert.id}>
-                <strong>{expert.name}</strong> - {expert.skill} (Rate:{" "}
-                {expert.rating})
-                <button onClick={() => setSelectedExpert(expert)}>
-                  Detail
-                </button>
+                {/* 전문가 이름에 상세페이지로 이동하는 Link 추가 */}
+                <Link
+                  to={`/experts/${expert.id}`}
+                  style={{ fontWeight: "bold" }}
+                >
+                  {expert.username}
+                </Link>
+                {" - "}
+                {expert.skill} (Rate: {expert.rating})
               </li>
             ))}
           </ul>
         </section>
-
-        {selectedExpert && (
-          <section>
-            <h3>{selectedExpert.name} Detail of Pro</h3>
-            <p>Skill: {selectedExpert.skill}</p>
-            <p>Rate: {selectedExpert.rating}</p>
-            <button onClick={() => setSelectedExpert(null)}>Close</button>
-          </section>
-        )}
       </div>
     </>
   );

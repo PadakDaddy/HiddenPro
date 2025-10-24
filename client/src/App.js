@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
 import { AuthProvider, AuthContext } from "./AuthContext";
+import ExpertDetailPage from "./pages/ExpertDetailPage";
 
 const PrivateRoute = ({ element }) => {
   const { user, loading } = useContext(AuthContext);
@@ -27,6 +28,10 @@ function App() {
             element={<PrivateRoute element={<MainPage />} />}
           />
           <Route path="*" element={<MainPage />} />
+          <Route
+            path="/experts/:id"
+            element={<PrivateRoute element={<ExpertDetailPage />} />}
+          />
         </Routes>
       </Router>
     </AuthProvider>
