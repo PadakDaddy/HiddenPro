@@ -7,7 +7,10 @@ const authenticateToken = require("../middleware/auth");
 const authorizeRoles = require("../middleware/authorize");
 
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "your-secret-key"; // 절대 유출되면 안 됨
+
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 // Create (회원 생성)
 // 회원가입 API
@@ -74,6 +77,18 @@ router.get("/:id", async (req, res) => {
     const user = await User.findByPk(req.params.id);
     if (user) res.json(user);
     else res.status(404).json({ error: "User not found" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'username', 'email', 'role'] // 비밀번호 제외
+    });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

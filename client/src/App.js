@@ -16,24 +16,31 @@ const PrivateRoute = ({ element }) => {
   if (loading) return <div>Loading...</div>;
   return user ? element : <Navigate to="/login" />;
 };
+
 function App() {
   return (
     <AuthProvider>
+           {" "}
       <Router>
+               {" "}
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />       
+           {" "}
           <Route
             path="/main"
             element={<PrivateRoute element={<MainPage />} />}
           />
-          <Route path="*" element={<MainPage />} />
+                   {" "}
           <Route
             path="/experts/:id"
             element={<PrivateRoute element={<ExpertDetailPage />} />}
           />
+                    <Route path="*" element={<Navigate to="/main" />} />       {" "}
         </Routes>
+             {" "}
       </Router>
+         {" "}
     </AuthProvider>
   );
 }
