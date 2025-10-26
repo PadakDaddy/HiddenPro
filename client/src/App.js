@@ -20,29 +20,24 @@ const PrivateRoute = ({ element }) => {
 function App() {
   return (
     <AuthProvider>
-           {" "}
+      {" "}
       <Router>
-               {" "}
+        {" "}
         <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />       
-           {" "}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />{" "}
           <Route
             path="/main"
             element={<PrivateRoute element={<MainPage />} />}
-          />
-                   {" "}
+          />{" "}
           <Route
             path="/experts/:id"
             element={<PrivateRoute element={<ExpertDetailPage />} />}
           />
-                    <Route path="*" element={<Navigate to="/main" />} />       {" "}
-        </Routes>
-             {" "}
-      </Router>
-         {" "}
+          <Route path="*" element={<Navigate to="/main" />} />{" "}
+        </Routes>{" "}
+      </Router>{" "}
     </AuthProvider>
   );
 }
-
 export default App;

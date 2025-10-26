@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../utils/api";
 import NavBar from "../components/NavBar";
+import "./ExpertDetailPage.css";
 
 const ExpertDetailPage = () => {
   const { id } = useParams();
@@ -30,15 +31,39 @@ const ExpertDetailPage = () => {
   return (
     <>
       <NavBar />
-      <div>
-        <h1>{expert.username} Detailed export Information</h1>
+      <div className="expert-detail">
+        <h1>{expert.username} – Expert Details</h1>
+        {expert.profileImage && (
+          <img
+            src={expert.profileImage}
+            alt="Profile"
+            className="profile-img"
+          />
+        )}
         <p>
-          <strong>E-mail:</strong> {expert.email}
+          <strong>Email:</strong> {expert.email}
         </p>
         <p>
-          <strong>Role:</strong> {expert.role}
+          <strong>Category:</strong> {expert.category || "N/A"}
         </p>
-        {/* 필요에 따라 추가 정보 표시 */}
+        <p>
+          <strong>Skills:</strong> {expert.skills || "N/A"}
+        </p>
+        <p>
+          <strong>Rating:</strong>{" "}
+          {expert.rating ? expert.rating.toFixed(1) : "N/A"}
+        </p>
+        <div>
+          <strong>Bio:</strong>
+          <br />
+          {expert.bio || "No bio provided."}
+        </div>
+        {
+          /* Add buttons or sections for 'Request Quote', 'Message', etc. */
+          <button className="cta-btn" onClick={() => alert("Coming soon!")}>
+            Send Inquiry
+          </button>
+        }
       </div>
     </>
   );
