@@ -10,9 +10,12 @@ import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
 import { AuthProvider, AuthContext } from "./AuthContext";
 import ExpertDetailPage from "./pages/ExpertDetailPage";
+import ExpertDashboard from "./pages/ExpertDashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
 const PrivateRoute = ({ element }) => {
   const { user, loading } = useContext(AuthContext);
+
   if (loading) return <div>Loading...</div>;
   return user ? element : <Navigate to="/login" />;
 };

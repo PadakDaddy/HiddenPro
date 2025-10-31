@@ -71,7 +71,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Read (모든 회원 조회)
+// Read all members(모든 회원 조회)
 router.get("/", async (req, res) => {
   try {
     const users = await User.findAll();
@@ -81,7 +81,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Read (특정 회원 조회)
+// Read specific member (특정 회원 조회)
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
