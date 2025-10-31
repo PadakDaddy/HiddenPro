@@ -26,7 +26,29 @@ const User = sequelize.define(
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "user", // 기본값 일반 사용자(user)로 설정
+      defaultValue: "user", //
+    },
+    //Expert Detailed Information
+    skill: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    rating: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+      allowNull: false,
+    },
+    bio: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    profileImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
 
     refreshToken: {
@@ -36,7 +58,7 @@ const User = sequelize.define(
   },
   {
     tableName: "users",
-    timestamps: true, // createdAt, updatedAt 자동 생성
+    timestamps: true, // adds createdAt and updatedAt fields
   }
 );
 

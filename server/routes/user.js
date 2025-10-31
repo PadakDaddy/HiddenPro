@@ -8,15 +8,24 @@ const authorizeRoles = require("../middleware/authorize");
 
 const jwt = require("jsonwebtoken");
 
-require('dotenv').config();
+require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
-
 
 // Create (회원 생성)
 // 회원가입 API
 router.post("/", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
+
+    // 입력값 검증
+    if (!username || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username, email, and password are required" });
+    }
+
+    // role 기본값 설정 (user 또는 expert만 허용)
+    const userRole = role === "expert" ? "expert" : "user";
 
     // 1. 비밀번호 해시화
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,18 +35,19 @@ router.post("/", async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: userRole,
     });
 
     // 3. JWT 토큰 생성
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email, role: newUser.role },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
     const refreshToken = jwt.sign(
       { id: newUser.id, email: newUser.email, role: newUser.role },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -82,12 +92,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get('/me', authenticateToken, async (req, res) => {
+router.get("/me", authenticateToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'username', 'email', 'role'] // 비밀번호 제외
+      attributes: ["id", "username", "email", "role"], // 비밀번호 제외
     });
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
