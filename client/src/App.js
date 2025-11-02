@@ -5,14 +5,13 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, AuthContext } from './AuthContext';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import MainPage from './pages/MainPage';
-import ExpertDetailPage from './pages/ExpertDetailPage';
-import ExpertDashboard from './pages/ExpertDashboard';
-import CustomerDashboard from './pages/CustomerDashboard';
-
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import MainPage from "./pages/MainPage";
+import { AuthProvider, AuthContext } from "./AuthContext";
+import ExpertDetailPage from "./pages/ExpertDetailPage";
+import ExpertDashboard from "./pages/ExpertDashboard";
+//CustomerDashboard 추가 예정
 const PrivateRoute = ({ element }) => {
   const { user, loading } = useContext(AuthContext);
 

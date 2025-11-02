@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../utils/api';
-import '../styles/RegisterForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
+import "./styles/RegisterForm.css";
 
 const RegisterForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // dafault: customer
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // dafault: customer
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,9 +19,9 @@ const RegisterForm = () => {
       setSuccessMsg("Sign-up Success! move to login page");
       setErrorMsg("");
 
-       //move to login page after 2seconds.
+      //move to login page after 2seconds.
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.error) {
@@ -67,7 +67,7 @@ const RegisterForm = () => {
           placeholder="Enter password"
         />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="role">Role:</label>
         <select
@@ -84,7 +84,9 @@ const RegisterForm = () => {
       {errorMsg && <p className="error-msg">{errorMsg}</p>}
       {successMsg && <p className="success-msg">{successMsg}</p>}
 
-      <button type="submit" className="submit-button">회원가입</button>
+      <button type="submit" className="submit-button">
+        회원가입
+      </button>
     </form>
   );
 };

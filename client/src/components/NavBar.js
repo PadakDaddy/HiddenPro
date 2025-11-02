@@ -1,8 +1,8 @@
 // client/src/components/NavBar.js
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
-import "../styles/NavBar.css";
+import "./styles/NavBar.css";
 
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);

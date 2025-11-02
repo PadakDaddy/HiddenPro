@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import NavBar from "../components/NavBar";
-import "../styles/Dashboard.css";
+import "./styles/Dashboard.css";
 
 const CustomerDashboard = () => {
   const { user } = useContext(AuthContext);

@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
-import "../styles/MainPage.css";
+import "./styles/MainPage.css";
 
 const experts = [
   { id: 1, username: "Park", skill: "Funiture", rating: 4.9 },
