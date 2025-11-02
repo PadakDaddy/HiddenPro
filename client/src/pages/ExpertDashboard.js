@@ -1,13 +1,13 @@
 import React from "react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import NavBar from "../components/NavBar";
 import "../styles/Dashboard.css";
-import { useNavigate } from "react-router-dom";
 
-const navigate = useNavigate();
 const ExpertDashboard = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -19,7 +19,9 @@ const ExpertDashboard = () => {
           <div className="dashboard-card">
             <h3>My profile</h3>
             <p>Add and modified profile information.</p>
-            <button>Manage profile</button>
+            <button onClick={() => navigate("/expert-profile")}>
+              Manage Profile
+            </button>
           </div>
           <div className="dashboard-card">
             <h3>Request service</h3>
