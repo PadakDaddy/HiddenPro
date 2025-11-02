@@ -1,105 +1,187 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import api from "../utils/api";
 import NavBar from "../components/NavBar";
-import "./styles/ExpertProfileForm.css";
+import "../styles/ExpertProfileForm.css";
 
 const ExpertProfileForm = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  // Load existing profile data if available
-  const [skill, setSkill] = useState("");
-  const [category, setCategory] = useState("");
-  const [bio, setBio] = useState("");
-  const [profileImage, setProfileImage] = useState("");
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    skill: "",
+    category: "",
+    bio: "",
+    profileImage: "",
+  });
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
+  // load existing profile data if editing
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get(`/users/${user.id}`);
-        setSkill(res.data.skill || "");
-        setCategory(res.data.category || "");
-        setBio(res.data.bio || "");
-        setProfileImage(res.data.profileImage || "");
-      } catch (e) {
-        setError("Failed to load profile data.");
+        const response = await api.get(`/users/${user.id}`);
+        const userData = response.data;
+
+        if (userData.skill || userData.category || userData.bio) {
+          setIsEditing(true);
+          setFormData({
+            skill: userData.skill || "",
+            category: userData.category || "",
+            bio: userData.bio || "",
+            profileImage: userData.profileImage || "",
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
       }
     };
-    if (user.role === "expert") fetchProfile();
+
+    if (user?.id) {
+      fetchProfile();
+    }
   }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
     try {
-      await api.put(`/users/${user.id}`, {
-        skill,
-        category,
-        bio,
-        profileImage,
-      });
-      setSuccess("Profile updated successfully.");
-      setError("");
+      const response = await api.put(`/users/${user.id}`, formData);
+      setSuccessMsg(
+        isEditing
+          ? "Profile updated successfully!"
+          : "Profile created successfully!"
+      );
+
+      // Update user context
+      setUser((prev) => ({
+        ...prev,
+        ...formData,
+      }));
+
+      setTimeout(() => {
+        navigate("/expert-dashboard");
+      }, 2000);
     } catch (err) {
-      setError("Failed to update profile.");
-      setSuccess("");
+      if (err.response && err.response.data && err.response.data.error) {
+        setErrorMsg(`Error: ${err.response.data.error}`);
+      } else {
+        setErrorMsg("Failed to submit profile. Please try again.");
+      }
     }
   };
 
-  if (user.role !== "expert") {
-    return (
-      <>
-        <NavBar />
-        <div style={{ padding: 40, textAlign: "center" }}>
-          Only experts can access this page.
-        </div>
-      </>
-    );
-  }
+  const categories = [
+    "Convenience",
+    "Electrical/Plumbing",
+    "Cleaning",
+    "Moving",
+    "Interior/Exterior",
+    "IT/Computer",
+    "Lesson/Tutoring",
+    "Design/Photography",
+    "Etc",
+  ];
 
   return (
     <>
       <NavBar />
-      <div className="expert-profile-form-container">
-        <h2>Expert Profile</h2>
-        <form onSubmit={handleSubmit} className="expert-profile-form">
+      <div className="profile-form-container">
+        <h1>{isEditing ? "Edit Profile" : "Register Profile"}</h1>
+        <p className="subtitle"> Input Expert's Profile</p>
+
+        <form onSubmit={handleSubmit} className="profile-form">
           <div className="form-group">
-            <label>Skill</label>
+            <label htmlFor="skill">Expert Skill*</label>
             <input
-              value={skill}
-              onChange={(e) => setSkill(e.target.value)}
+              id="skill"
+              type="text"
+              name="skill"
+              value={formData.skill}
+              onChange={handleChange}
+              placeholder="ex: Plumbing, Electrical, Cleaning..."
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Category</label>
-            <input
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+            <label htmlFor="category">category *</label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
               required
-            />
+            >
+              <option value="">Choice</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="form-group">
-            <label>Bio (Introduce)</label>
+            <label htmlFor="bio">Introduction *</label>
             <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              rows={5}
+              id="bio"
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              placeholder="Write a brief introduction about yourself..."
+              rows="6"
+              required
             />
+            <small className="char-count">{formData.bio.length}/500</small>
           </div>
+
           <div className="form-group">
-            <label>Profile Image URL</label>
+            <label htmlFor="profileImage">Profile image URL</label>
             <input
-              value={profileImage}
-              onChange={(e) => setProfileImage(e.target.value)}
+              id="profileImage"
+              type="text"
+              name="profileImage"
+              value={formData.profileImage}
+              onChange={handleChange}
+              placeholder="https://example.com/profile.jpg"
             />
+            {formData.profileImage && (
+              <div className="image-preview">
+                <img src={formData.profileImage} alt="Preview" />
+              </div>
+            )}
           </div>
-          <button type="submit" className="submit-button">
-            Save Profile
-          </button>
-          {success && <p className="success">{success}</p>}
-          {error && <p className="error">{error}</p>}
+
+          {errorMsg && <p className="error-msg">{errorMsg}</p>}
+          {successMsg && <p className="success-msg">{successMsg}</p>}
+
+          <div className="button-group">
+            <button type="submit" className="submit-button">
+              {isEditing ? "Complete edit" : "Complete registration"}
+            </button>
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={() => navigate("/expert-dashboard")}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </>

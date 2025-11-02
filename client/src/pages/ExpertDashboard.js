@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import NavBar from "../components/NavBar";
 import "../styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
+const navigate = useNavigate();
 const ExpertDashboard = () => {
   const { user } = useContext(AuthContext);
 
