@@ -110,7 +110,8 @@ router.put("/:id", authenticateToken, async (req, res) => {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const { username, email, password } = req.body;
+    const { username, email, password, skill, category, bio, profileImage } =
+      req.body;
 
     // 비밀번호가 전달된 경우 해시 처리
     let hashedPassword;
@@ -122,13 +123,20 @@ router.put("/:id", authenticateToken, async (req, res) => {
     const updatedData = {
       username,
       email,
+      skill,
+      category,
+      bio,
+      profileImage,
     };
     if (hashedPassword) {
       updatedData.password = hashedPassword;
     }
 
     await user.update(updatedData);
-    res.json(user);
+
+    // 비밀번호 제외하고 응답
+    const { password: _, ...userWithoutPassword } = user.toJSON();
+    res.json(userWithoutPassword);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

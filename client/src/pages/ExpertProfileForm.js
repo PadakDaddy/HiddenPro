@@ -60,7 +60,7 @@ const ExpertProfileForm = () => {
     setSuccessMsg("");
 
     try {
-      const response = await api.put(`/users/${user.id}`, formData);
+      await api.put(`/users/${user.id}`, formData);
       setSuccessMsg(
         isEditing
           ? "Profile updated successfully!"
